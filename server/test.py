@@ -1,6 +1,15 @@
 from scraper import Ldscraper
-scraper = Ldscraper("https://sallysbakingaddiction.com/chewy-chocolate-chip-cookies/")
+from parser import Ingredient_parser 
+
+parser = Ingredient_parser()
+scraper = Ldscraper("https://iambaker.net/coffee-sugar-cookies/")
 
 if scraper.fetch():
     recipe = scraper.get_recipe()
-    print(scraper.get_recipe()["ingredients"])
+
+    parsed_ingredients = []
+    for ingredient in recipe["ingredients"]:
+        parsed_ingredients.append(parser.parse_line(ingredient))
+    
+    for parsed_ingredient in parsed_ingredients:
+        print(parsed_ingredient)
