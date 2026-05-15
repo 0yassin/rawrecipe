@@ -38,12 +38,27 @@ class Ingredient_parser:
             raw_string = raw_string.replace('&amp;', '&').replace('\xa0', ' ')
             raw_string = self.parse_unicode_fraction(raw_string)
             match = re.search(self.number_pattern, raw_string)
-            quantity_raw = match.group('quantity') if match else "0"
-            quantity = self.parse_quantity(quantity_raw)
+
+
+            # quantity_raw = match.group('quantity') if match else "0"
+            # quantity = self.parse_quantity(quantity_raw)
+
+            if match: 
+                quantity_raw = match.group('quantity')
+                quantity = self.parse_quantity(quantity_raw)
+                remaining_text = raw_string.replace(quantity_raw, "", 1).strip()
+
+            else:
+                quantity = 1.0
+                remaining_text = raw_string.strip()
+
+            # remaining_text = raw_string.replace(quantity_raw, "").strip()
+
+            remaining_text = re.sub(r'\(.*?\)', '', remaining_text).strip()
 
             found_unit = None
-            remaining_text = raw_string.replace(quantity_raw, "").strip()
-            remaining_text = re.sub(r'\(.*?\)', '', remaining_text).strip()
+
+
             for unit_key, alieases in self.units.items():
                 for alias in alieases:
                     if re.search(rf'\b{re.escape(alias)}\b', remaining_text,flags=re.I):
