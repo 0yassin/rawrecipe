@@ -13,3 +13,5 @@ if scraper.fetch():
     
     for parsed_ingredient in parsed_ingredients:
         print(parsed_ingredient)
+
+    print(recipe['instructions'])

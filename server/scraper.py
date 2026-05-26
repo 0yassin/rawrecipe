@@ -1,8 +1,6 @@
 from requests import request
 import requests
-
 from bs4 import BeautifulSoup
-
 import json
 
 class Ldscraper():
@@ -58,10 +56,17 @@ class Ldscraper():
         }
 
     def _parse_instructions(self, raw_steps):
-        steps = []
-        for step in raw_steps:
-            if isinstance(step, dict) and "text" in step:
-                steps.append(step["text"])
-            elif isinstance(step, str):
-                steps.append(step)
-        return steps
+
+        parsed_instructions = []
+
+        if raw_steps[0]['itemListElement']:
+            for item in raw_steps[0]['itemListElement']:
+                # parsed_instructions.append(item['text'])
+                parsed_instructions.append({
+                    "name": item['name'],
+                    "text": item['text'],
+                })
+
+        # return raw_steps[0]['itemListElement'
+        return parsed_instructions
+
