@@ -1,10 +1,31 @@
 'use client'
 
 import { useState } from "react";
+import {z} from 'zod'
+
+const urlSchema = z.url({ message: "Please enter a valid URL" });
+const delay = (ms:number) => new Promise(resolve => setTimeout(resolve, ms));
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('')
+  const [url, seturl] = useState('')
+
+
+  const handle_button = async (e:React.MouseEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    await delay(600)
+    const parsed = urlSchema.safeParse(url)
+
+    if (!parsed.success){
+      setError(parsed.error.issues[0].message || "Please enter a valid URL")
+      setLoading(false)
+    }
+  }
+
 
   return (
     <div className="w-full min-h-screen font-mono bg-white flex flex-col">
@@ -25,6 +46,8 @@ export default function Home() {
             
             <input 
               placeholder={loading ? "Scraping recipe data..." : "Enter your recipe Url here"} 
+              value={url}
+              onChange={(e)=>seturl(e.target.value)}
               type="text" 
               disabled={loading}
               className="outline-hidden px-4 py-4 bg-transparent grow min-w-0 placeholder:text-[#161616]/80 disabled:cursor-progress"
@@ -34,7 +57,7 @@ export default function Home() {
               onClick={(e) => {
                 e.preventDefault(); 
                 setLoading(true); 
-                setTimeout(() => setLoading(false), 3000); 
+                handle_button(e)
               }} 
               disabled={loading}
               className={`h-full aspect-square flex items-center justify-center p-4 text-white shrink-0 transition-colors duration-200 ${
@@ -48,8 +71,11 @@ export default function Home() {
             
             
           </div>
-              
-          <div className="text-[#C11919] max-w-lg w-full mt-2 text-[20px] text-left">{error}</div>
+          <div className="inline max-w-lg w-full mt-2 text-[20px] text-[#C11919] text-left  ">
+          <span>{error}</span>
+          <span className="text-transparent">'</span>
+          </div>
+
         </div>
       </div>
     </div>
