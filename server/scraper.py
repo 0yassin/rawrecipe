@@ -1,5 +1,7 @@
+from parser import Ingredient_parser
 from requests import request
 import requests
+# pyrefly: ignore [missing-import]
 from bs4 import BeautifulSoup
 import json
 
@@ -31,7 +33,7 @@ class Ldscraper():
                                 return True
                     except (json.JSONDecodeError, TypeError):
                                         continue
-                return False
+            return False
         except Exception as e:
             print(f"Error fetching {self.url}: {e}")
             return False
@@ -45,11 +47,21 @@ class Ldscraper():
         return False
 
 
+
     def get_recipe(self):
+        parsed_ingredients = []
+        parser = Ingredient_parser()
+
+        for ingredient in self.recipe_data.get("recipeIngredient", []):
+            parsed_ingredients.append(parser.parse_line(ingredient))
+    
         return{
             "title": self.recipe_data.get("name"),
             "author": self.recipe_data.get("author", {}).get("name") if isinstance(self.recipe_data.get("author"), dict) else self.recipe_data.get("author"),
-            "ingredients": self.recipe_data.get("recipeIngredient", []),
+
+            "ingredients": parsed_ingredients,
+
+            # "ingredients": self.recipe_data.get("recipeIngredient", []),
             "instructions": self._parse_instructions(self.recipe_data.get("recipeInstructions", [])),
             "yields": self.recipe_data.get("recipeYield"),
             "image": self.recipe_data.get("image")
@@ -58,15 +70,35 @@ class Ldscraper():
     def _parse_instructions(self, raw_steps):
 
         parsed_instructions = []
+        if not raw_steps:
+            return parsed_instructions
 
-        if raw_steps[0]['itemListElement']:
-            for item in raw_steps[0]['itemListElement']:
-                # parsed_instructions.append(item['text'])
+
+        if isinstance(raw_steps, list) and all(isinstance(s, str) for s in raw_steps):
+            for idx, step in enumerate(raw_steps):
                 parsed_instructions.append({
-                    "name": item['name'],
-                    "text": item['text'],
+                    "name": f"Step {idx + 1}",
+                    "text": step
                 })
+            return parsed_instructions
 
-        # return raw_steps[0]['itemListElement'
+
+        try:
+            target_list = []
+            if isinstance(raw_steps, list) and len(raw_steps) > 0:
+                if isinstance(raw_steps[0], dict) and 'itemListElement' in raw_steps[0]:
+                    target_list = raw_steps[0]['itemListElement']
+                else:
+                    target_list = raw_steps
+
+            for item in target_list:
+                if isinstance(item, dict):
+                    parsed_instructions.append({
+                        "name": item.get('name', 'Step'),
+                        "text": item.get('text', '')
+                    })
+        except Exception:
+            pass
+        
         return parsed_instructions
 
