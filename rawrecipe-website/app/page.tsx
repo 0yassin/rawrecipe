@@ -44,7 +44,7 @@ export default function Home() {
     }
 
     try{ 
-      const targetUrl = `http://${process.env.NEXT_PUBLIC_API_URL}/scrape_recipe?url=${encodeURIComponent(url)}`;
+      const targetUrl = `https://${process.env.NEXT_PUBLIC_API_URL}/scrape_recipe?url=${encodeURIComponent(url)}`;
       const response = await fetch(targetUrl, {
         method:"GET",
         headers:{
@@ -133,28 +133,42 @@ export default function Home() {
         </div>
       </div>
       
-       <div className="w-full min-h-screen flex-1 h-full pt-8 pl-8 flex text-[#161616] dark:text-white  flex-col items-center justify-center p-4">
+       <div className="w-full min-h-screen flex-1 h-full pb-16 pt-8 pl-s8 flex text-[#161616] dark:text-white  flex-col items-center justify-center p-4">
          
               {recipe && (
-                <div ref={recipeSectionRef} className=" pt-8 dark:text-zinc-200 text-left w-full h-full flex-1 max-w-lg">
-                  <h1 className="text-[32px] text-[#161616] dark:text-zinc-200 font-medium">{recipe.title}</h1>
-                  <h3 className="text-[24.6px] font-medium mt-2">Ingredients:</h3>
-                  <ul className=" list-none pl-5 text-[20px]">
+                <div ref={recipeSectionRef} className=" pt-8 dark:text-zinc-300 text-left w-full h-full flex-1 max-w-lg">
+                  <h1 className="text-[32px] text-[#161616] dark:text-emerald-400 font-medium">
+                    {recipe.title} 
+                  </h1>
+
+                  <h3 className="text-[24.6px] font-medium mt-4 dark:text-purple-400 pl-4">
+                    ingredients<span className="dark:text-zinc-400">:</span> 
+                  </h3>
+                  <ul className=" list-none pl-12 text-[20px]">
                     {recipe.ingredients.map((ing: any, i: number) => (
-                      <li className=" before:content-['-'] before:mr-2 " key={i}>{ing.quantity} {ing.unit} {ing.name}</li>
+                      <li className=" before:content-['-'] before:mr-2 before:dark:text-zinc-600 py-0.5" key={i}>
+                        <span className="dark:text-amber-500 font-semibold">{ing.quantity}</span>{" "}
+                        <span className="dark:text-pink-500 italic">{ing.unit}</span>{" "}
+                        <span className="dark:text-zinc-100">{ing.name.replace('&#8217;', "'")}</span>
+                      </li>
                     ))}
                   </ul>
 
-                  <h3 className="text-[24.6px] font-medium mt-4">Instructions:</h3>
-                  <ul className="list-none pl-5 text-[20px]">
+                  <h3 className="text-[24.6px] font-medium mt-4 dark:text-purple-400 pl-4">
+                    instructions<span className="dark:text-zinc-400">:</span> 
+                  </h3>
+                  <ul className="list-none pl-12 text-[20px]">
                     {recipe.instructions.map((inst: any, i: number) => (
-                      <li className="before:content-['-'] before:mr-2 mb-2" key={i}>{inst.text}</li>
+                      <li className="before:content-['-'] before:mr-2 before:dark:text-zinc-600 mb-3 text-left" key={i}>
+                        <span className="dark:dark:text-zinc-100 font-sans text-[20px]">{inst.text.replace('&#8217;', "'")}</span>
+                      </li>
                     ))}
                   </ul>
 
                 </div>
               )}
         </div>
-    </div> 
+    </div > 
   );
 }
+
