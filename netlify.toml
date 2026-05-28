@@ -1,0 +1,4 @@
+[build]
+  base = "rawrecipe-website"
+  command = "next build"
+  publish = ".next"
