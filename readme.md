@@ -1,16 +1,25 @@
-# Hello there!
+# rawrecipe
 
-this is an app designed to extract the recipe from bloated recipe websites that are full of ads and trackers (which are definitely not there because of the company starting with G and ending in OOGLE)
-Current tech stack:
--nextJS
--Fastapi
--bs4
+An app designed to extract clean recipe data from bloated recipe websites that are full of ads and trackers *(which are definitely not there because of a certain company starting with G and ending in OOGLE)*.
 
-features to add in the future: 
--built in unit conversion
--command line interface version
--a better way of displaying the recipes in the website
--more customizations and themes
--maybe a better less stupid name for the project
+---
 
-thank you for reading this!
+## Current Tech Stack
+
+* **Frontend:** Next.js
+* **Backend:** FastAPI
+* **Scraping:** Beautiful Soup 4 (`bs4`)
+
+---
+
+## Future Features
+
+* [ ] Built-in unit conversion
+* [ ] Command Line Interface (CLI) version
+* [ ] A better way of displaying the recipes on the website
+* [ ] More customizations and themes
+* [ ] Maybe a better, less stupid name for the project
+
+---
+
+> Thank you for reading this!
