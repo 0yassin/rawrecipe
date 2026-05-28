@@ -4,6 +4,7 @@ import {z} from 'zod'
 import { useTheme } from "@/components/ThemeProvider"
 const urlSchema = z.url({ message: "Please enter a valid URL" });
 const delay = (ms:number) => new Promise(resolve => setTimeout(resolve, ms));
+import Image from "next/image";
 
 interface ParsedIngredient{
   text:string,
@@ -120,7 +121,11 @@ export default function Home() {
                   : "bg-[#161616]/85 text-white dark:bg-zinc-600 cursor-pointer"
               }`}
             >
-              <span>{loading ? "BBB" : "AAA"}</span>
+              {
+                !loading? <Image width={32} height={32} src="/search.svg" alt="search" />
+                :
+                <Image width={32} height={32} src="/Redo.svg" className=" animate-spin [animation-duration:2s]" alt="loading" />
+              }
             </button>
             
             
